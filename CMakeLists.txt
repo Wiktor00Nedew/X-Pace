@@ -19,7 +19,7 @@ find_package(Qt6 COMPONENTS
         Network
         REQUIRED)
 
-add_executable(X_Pace main.cpp src/windows/MainWindow.cpp)
+add_executable(X_Pace src/main.cpp src/windows/MainWindow.cpp)
 
 target_compile_options(X_Pace PRIVATE -Wall)
 
