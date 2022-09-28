@@ -2,11 +2,11 @@
 // Created by wiktor on 9/21/22.
 //
 
-#ifndef X_PACE_MAINWINDOW_H
-#define X_PACE_MAINWINDOW_H
+#pragma once
 
 #include <QWidget>
 #include <QGridLayout>
+#include <QPushButton>
 
 class MainWindow : public QWidget{
     Q_OBJECT
@@ -19,8 +19,9 @@ private:
     QGridLayout *mainLayout_;
 
     // methods
+    void createComponents();
 
-
+    // components
+    QPushButton *testButton_;
 };
 
-#endif //X_PACE_MAINWINDOW_H

@@ -1,3 +1,9 @@
 MainWindow {
-    background: red;
+    background-color: #e7e7e7;
+}
+
+QPushButton {
+    background-color: whitesmoke;
+    border: 2px solid #262020;
+    border-radius: 6px;
 }
