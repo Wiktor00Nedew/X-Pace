@@ -17,7 +17,7 @@ find_package(Qt6 COMPONENTS
         Network
         REQUIRED)
 
-add_executable(X_Pace src/main.cpp src/windows/MainWindow.cpp src/windows/MainWindow.h src/utilities/StylesLoader.cpp src/utilities/StylesLoader.h src/utilities/Singleton.h)
+add_executable(X_Pace src/main.cpp src/windows/MainWindow.cpp src/windows/MainWindow.h src/utilities/StylesLoader.cpp src/utilities/StylesLoader.h src/utilities/Singleton.h src/components/PasswordBox.cpp src/components/PasswordBox.h src/structures/TitleBar.cpp src/structures/TitleBar.h src/pages/LoginPage.cpp src/pages/LoginPage.h src/api/Api.cpp src/api/ApiMessage.h src/api/Api.h src/utilities/QNetworkAccessManagerWithDelete.h src/utilities/QNetworkAccessManagerWithPatch.h src/utilities/json.hpp src/utilities/common.cpp src/utilities/common.h src/structures/LoginForm.cpp src/structures/LoginForm.h src/components/ErrorLabel.h src/components/ErrorLabel.cpp src/components/LoadingIndicator.cpp src/components/LoadingIndicator.h src/utilities/StringManager.h src/pages/RegisterPage.cpp src/pages/RegisterPage.h src/structures/RegisterForm.cpp src/structures/RegisterForm.h)
 
 target_compile_options(X_Pace PRIVATE -Wall)
 

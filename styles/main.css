@@ -1,9 +1,50 @@
 MainWindow {
-    background-color: #e7e7e7;
+    background-color: #354345;
 }
 
 QPushButton {
-    background-color: whitesmoke;
-    border: 2px solid #262020;
-    border-radius: 6px;
+    background-color: #F0A202;
+    border-radius: 14px;
+    font: 14px Rubik;
+    padding: 5px;
+    border: 2px solid #F0A202;
+}
+
+QPushButton:hover {
+    border: 1px solid #F4F4F6;
+}
+
+QPushButton:pressed {
+    border: 2px solid #F4F4F6;
+}
+
+QLineEdit {
+    background-color: #E6E6E9;
+    border: 2px solid #F0A202;
+    border-radius: 14px;
+    font: 14px Rubik;
+    padding: 5px;
+}
+
+QLineEdit:focus {
+    border: 3px solid #F0A202;
+}
+
+QLabel {
+    color: #F4F4F6;
+    font: 14px Rubik;
+}
+
+TitleBar {
+
+}
+
+LoginPage {
+    margin: 30%;
+}
+
+ErrorLabel {
+    color: #FF0000;
+    font: 12px Rubik;
+    padding: 5px;
 }
