@@ -7,6 +7,8 @@
 #include "../components/PasswordBox.h"
 #include "../components/LoadingIndicator.h"
 #include "../components/ErrorLabel.h"
+#include "../components/Title.h"
+#include "../components/ClickableLabel.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 
@@ -27,11 +29,13 @@ private:
     // layouts
     QVBoxLayout *mainLayout_;
 
+    Title *title_;
     QLabel *loginLabel_;
     QLineEdit *loginBox_;
     QLabel *passwordLabel_;
     PasswordBox *passwordBox_;
     QPushButton *loginButton_;
+    ClickableLabel *registerRedirect_;
     LoadingIndicator *loadingIndicator_;
     ErrorLabel *errorLabel_;
 
@@ -43,4 +47,5 @@ private:
 
 signals:
     void loggingIn(std::string login, std::string password);
+    void changingToRegister();
 };

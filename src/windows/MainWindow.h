@@ -10,6 +10,8 @@
 #include "../components/PasswordBox.h"
 #include "../structures/TitleBar.h"
 #include "../pages/LoginPage.h"
+#include "../pages/RegisterPage.h"
+#include "../pages/ApplicationPage.h"
 #include <QStackedWidget>
 
 class MainWindow : public QWidget{
@@ -28,6 +30,8 @@ private:
     // methods
     void createComponents();
     void createPages();
+    void connectSignals();
+    void setStyling();
 
     // events
     void resizeEvent(QResizeEvent *event);
@@ -41,5 +45,12 @@ private:
 
     // pages
     LoginPage *loginPage_;
+    RegisterPage *registerPage_;
+    ApplicationPage *applicationPage_;
+
+public slots:
+    void changedToRegister();
+    void changedToLogin();
+    void changedToApplication();
 };
 

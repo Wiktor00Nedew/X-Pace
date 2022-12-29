@@ -27,21 +27,28 @@ ApiMessage Api::apiPost(const std::string& url, const nlohmann::json& params, co
     eventLoop.exec(); // blocks stack until "finished()" has been called
 
     std::string apiResponse = (reply->readAll()).toStdString();
-    int statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QVariant statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     delete reply;
 
-    if(apiResponse == ""){
+    int statusCode = statusHeader.toInt();
+
+    if(!statusHeader.isValid()){
         qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
-        statusHeader = 404;
+        statusCode = 404;
     }
 
+    if(statusHeader.isValid() && apiResponse.empty()){
+        apiResponse = "{\"data\":\"no\"}";
+    }
+
+    //qDebug() << "here";
     //TODO logs
-    qDebug() << QString::fromStdString(apiResponse) << "\n";
-    qDebug() << statusHeader;
-    nlohmann::json::parse(apiResponse);
-    qDebug() << apiResponse.empty();
-    return {nlohmann::json::parse(apiResponse), statusHeader};
+    //qDebug() << QString::fromStdString(apiResponse) << "\n";
+    //qDebug() << statusHeader;
+    //nlohmann::json::parse(apiResponse);
+    //qDebug() << apiResponse.empty();
+    return {nlohmann::json::parse(apiResponse), statusCode};
 
 }
 
@@ -71,7 +78,7 @@ ApiMessage Api::apiPatch(const std::string& url, const nlohmann::json& params, c
 
     //TODO logs
     //qDebug() << QString::fromStdString(apiResponse) << "\n";
-    qDebug() << statusHeader;
+    //qDebug() << statusHeader;
     return {nlohmann::json::parse(apiResponse), statusHeader};
 
 }
@@ -102,7 +109,7 @@ ApiMessage Api::apiDelete(const std::string& url, const nlohmann::json& params, 
 
     //TODO logs
     //qDebug() << QString::fromStdString(apiResponse) << "\n";
-    qDebug() << statusHeader;
+    //qDebug() << statusHeader;
     return {nlohmann::json::parse(apiResponse), statusHeader};
 
 }
@@ -125,15 +132,15 @@ ApiMessage Api::apiGet(const std::string& url, const std::string& authToken) {
     delete reply;
 
     if(apiResponse == ""){
-        qDebug() << "empty";
+        //qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
         statusHeader = 404;
     }
 
     //TODO logs
-    qDebug() << QString::fromStdString(apiResponse) << "\n";
-    qDebug() << statusHeader;
-    qDebug() << apiResponse.empty();
+    //qDebug() << QString::fromStdString(apiResponse) << "\n";
+    //qDebug() << statusHeader;
+    //qDebug() << apiResponse.empty();
     return {nlohmann::json::parse(apiResponse), statusHeader};
 }
 
@@ -144,6 +151,16 @@ ApiMessage Api::apiUserLogin(const std::string &login, const std::string &passwo
     };
 
     return apiPost(apiUrl + "/auth/login", body);
+}
+
+ApiMessage Api::apiUserRegister(const std::string &username, const std::string &email, const std::string &password) {
+    nlohmann::json body = {
+            {"username", username},
+            {"email", email},
+            {"password", password}
+    };
+
+    return apiPost(apiUrl + "/auth/register", body);
 }
 
 void Api::setApiToken(const std::string &token) {

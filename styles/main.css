@@ -48,3 +48,48 @@ ErrorLabel {
     font: 12px Rubik;
     padding: 5px;
 }
+
+ClickableLabel {
+    text-decoration: underline;
+    color: #006E90;
+    font: 13px Rubik;
+}
+
+Title {
+    color: #F4F4F6;
+    font: 30px Rubik;
+}
+
+Button {
+    color: #FFFFFF;
+    font: 14px Rubik;
+    padding: 5px;
+    background-color: #354345;
+    border: none;
+}
+
+QMenu {
+    color: #FFFFFF;
+    font: 14px Rubik;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #343a40;
+}
+QMenu::item {
+
+}
+QMenu::item:selected {
+    background-color: #52575c;
+}
+QMenu::item:pressed {
+    background-color: #1c1e23;
+}
+
+TopBar {
+    background-color: #354345;
+    border-bottom: 2px solid #006E90;
+}
+
+QMessageBox {
+    background-color: #333343;
+}

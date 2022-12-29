@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) {
     mainLayout_ = new QGridLayout();
 
     createComponents();
+    connectSignals();
+    setStyling();
 
     setLayout(mainLayout_);
     resize(800, 600);
@@ -38,20 +40,53 @@ void MainWindow::createComponents() {
     mainLayout_->addWidget(testLabel_, 4, 0);
      */
 
+    createPages();
 
-    loginPage_ = new LoginPage();
-
+    mainStack_->addWidget(applicationPage_);
     mainStack_->addWidget(loginPage_);
+    mainStack_->addWidget(registerPage_);
     mainLayout_->addWidget(mainStack_);
+
+    mainStack_->setCurrentIndex(mainStack_->indexOf(loginPage_));
 }
 
 void MainWindow::createPages() {
-
+    loginPage_ = new LoginPage();
+    registerPage_ = new RegisterPage();
+    applicationPage_ = new ApplicationPage();
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
     loginPage_->onResize();
+}
+
+void MainWindow::connectSignals() {
+    connect(loginPage_, &LoginPage::changingToRegister, this, &MainWindow::changedToRegister);
+    connect(registerPage_, &RegisterPage::changingToLogin, this, &MainWindow::changedToLogin);
+    connect(applicationPage_, &ApplicationPage::logedOut, this, &MainWindow::changedToLogin);
+    connect(loginPage_, &LoginPage::changingToApplication, this, &MainWindow::changedToApplication);
+    connect(loginPage_, &LoginPage::logedIn, applicationPage_, &ApplicationPage::onLogin);
+
+}
+
+void MainWindow::changedToRegister() {
+    //qDebug() << "caught by connect 3";
+    //qDebug() << mainStack_->indexOf(registerPage_);
+    mainStack_->setCurrentIndex(mainStack_->indexOf(registerPage_));
+}
+
+void MainWindow::changedToLogin() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(loginPage_));
+}
+
+void MainWindow::setStyling() {
+    mainLayout_->setSpacing(0);
+    mainLayout_->setContentsMargins(0, 0, 0, 0);
+}
+
+void MainWindow::changedToApplication() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(applicationPage_));
 }
 

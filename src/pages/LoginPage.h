@@ -32,5 +32,7 @@ public slots:
 
 signals:
     void logedIn();
+    void changingToRegister();
+    void changingToApplication();
 
 };

@@ -29,6 +29,7 @@ public:
 
     // public specific methods to get data from API
     ApiMessage apiUserLogin(const std::string& login, const std::string& password);
+    ApiMessage apiUserRegister(const std::string &username, const std::string &email, const std::string &password);
     ApiMessage apiGetUserByToken();
     ApiMessage apiRevokeToken();
 };

@@ -29,6 +29,10 @@ void LoginPage::setStyling() {
 
 void LoginPage::connectSignals() {
     connect(loginForm_, &LoginForm::loggingIn, this, &LoginPage::onLogin);
+    connect(loginForm_, &LoginForm::changingToRegister, this, [=](){
+        //qDebug() << "caught by connect 2";
+        emit changingToRegister();
+    });
 }
 
 void LoginPage::onLogin(std::string login, std::string password) {
@@ -47,19 +51,18 @@ void LoginPage::onLogin(std::string login, std::string password) {
     }
 
     auto apiResponse = Api::get().apiUserLogin(login, password);
-    qDebug() << "test1";
+    //qDebug() << "test1";
     if (apiResponse.type == ApiMessage::Error){
         loginForm_->stopLoading();
         loginForm_->setError(apiResponse.data["key"]);
         return;
     }
-    qDebug() << "here";
+    //qDebug() << "here";
     Api::get().setApiToken(apiResponse.data["token"]["id"]);
 
     loginForm_->setError("NO_ERROR");
 
-    // TODO switching to app page
-
+    emit changingToApplication();
     emit logedIn();
 
     loginForm_->stopLoading();
