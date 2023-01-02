@@ -22,7 +22,10 @@ private:
 
     // API-specific variables e.g. token, url...
     std::string apiToken;
+    std::string currentTeam;
     std::string apiUrl = "http://localhost:5000/api";
+
+    nlohmann::json apiUser;
 public:
     void setApiToken(const std::string& token);
     const std::string& getApiToken() const;
@@ -30,8 +33,19 @@ public:
     // public specific methods to get data from API
     ApiMessage apiUserLogin(const std::string& login, const std::string& password);
     ApiMessage apiUserRegister(const std::string &username, const std::string &email, const std::string &password);
-    ApiMessage apiGetUserByToken();
+    ApiMessage apiFetchUser();
     ApiMessage apiRevokeToken();
+    ApiMessage apiGetTeamById(const std::string& id);
+    ApiMessage apiCreateTeam(const std::string& name);
+    ApiMessage apiDeleteTeam(const std::string& teamId);
+    ApiMessage apiGetPageById(const std::string& pageId);
+    ApiMessage apiGetDirectoryById(const std::string& directoryId);
+    ApiMessage apiAddPage(const std::string& name, const std::string& team, const std::string& parentDirectory, const std::string& content = ".");
+    ApiMessage apiAddDirectory(const std::string& name, const std::string& team, const std::string& parentDirectory);
+
+    nlohmann::json getUser();
+    void setCurrentTeam(const std::string& currentTeam);
+    const std::string& getCurrentTeam();
 };
 
 

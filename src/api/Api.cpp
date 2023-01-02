@@ -68,18 +68,25 @@ ApiMessage Api::apiPatch(const std::string& url, const nlohmann::json& params, c
     eventLoop.exec(); // blocks stack until "finished()" has been called
 
     std::string apiResponse = (reply->readAll()).toStdString();
-    int statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QVariant statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     delete reply;
 
-    if(apiResponse == ""){
+    int statusCode = statusHeader.toInt();
+
+    if(!statusHeader.isValid()){
+        qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
-        statusHeader = 404;
+        statusCode = 404;
+    }
+
+    if(statusHeader.isValid() && apiResponse.empty()){
+        apiResponse = "{\"data\":\"no\"}";
     }
 
     //TODO logs
     //qDebug() << QString::fromStdString(apiResponse) << "\n";
     //qDebug() << statusHeader;
-    return {nlohmann::json::parse(apiResponse), statusHeader};
+    return {nlohmann::json::parse(apiResponse), statusCode};
 
 }
 
@@ -99,18 +106,25 @@ ApiMessage Api::apiDelete(const std::string& url, const nlohmann::json& params, 
     eventLoop.exec(); // blocks stack until "finished()" has been called
 
     std::string apiResponse = (reply->readAll()).toStdString();
-    int statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QVariant statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     delete reply;
 
-    if(apiResponse == ""){
+    int statusCode = statusHeader.toInt();
+
+    if(!statusHeader.isValid()){
+        qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
-        statusHeader = 404;
+        statusCode = 404;
+    }
+
+    if(statusHeader.isValid() && apiResponse.empty()){
+        apiResponse = "{\"data\":\"no\"}";
     }
 
     //TODO logs
     //qDebug() << QString::fromStdString(apiResponse) << "\n";
     //qDebug() << statusHeader;
-    return {nlohmann::json::parse(apiResponse), statusHeader};
+    return {nlohmann::json::parse(apiResponse), statusCode};
 
 }
 
@@ -128,20 +142,26 @@ ApiMessage Api::apiGet(const std::string& url, const std::string& authToken) {
     eventLoop.exec(); // blocks stack until "finished()" has been called
 
     std::string apiResponse = (reply->readAll()).toStdString();
-    int statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QVariant statusHeader = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     delete reply;
 
-    if(apiResponse == ""){
-        //qDebug() << "empty";
+    int statusCode = statusHeader.toInt();
+
+    if(!statusHeader.isValid()){
+        qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
-        statusHeader = 404;
+        statusCode = 404;
+    }
+
+    if(statusHeader.isValid() && apiResponse.empty()){
+        apiResponse = "{\"data\":\"no\"}";
     }
 
     //TODO logs
     //qDebug() << QString::fromStdString(apiResponse) << "\n";
     //qDebug() << statusHeader;
     //qDebug() << apiResponse.empty();
-    return {nlohmann::json::parse(apiResponse), statusHeader};
+    return {nlohmann::json::parse(apiResponse), statusCode};
 }
 
 ApiMessage Api::apiUserLogin(const std::string &login, const std::string &password) {
@@ -171,8 +191,13 @@ const std::string &Api::getApiToken() const {
     return apiToken;
 }
 
-ApiMessage Api::apiGetUserByToken() {
-    return apiGet(apiUrl + "/users/me", apiToken);
+ApiMessage Api::apiFetchUser() {
+    ApiMessage apiResponse = apiGet(apiUrl + "/users/me", apiToken);
+
+    if (apiResponse.type == ApiMessage::NoError)
+        apiUser = apiResponse.data;
+
+    return apiResponse;
 }
 
 ApiMessage Api::apiRevokeToken() {
@@ -182,4 +207,66 @@ ApiMessage Api::apiRevokeToken() {
 
     return apiPost(apiUrl + "/auth/token/revoke", body, apiToken);
 }
+
+ApiMessage Api::apiGetTeamById(const std::string& id) {
+    return apiGet(apiUrl + "/teams/" + id, apiToken);
+}
+
+nlohmann::json Api::getUser() {
+    return apiUser;
+}
+
+ApiMessage Api::apiCreateTeam(const std::string& name) {
+    nlohmann::json body = {
+            {"name", name}
+    };
+    return apiPost(apiUrl + "/teams/create", body, apiToken);
+}
+
+ApiMessage Api::apiDeleteTeam(const std::string &teamId) {
+    nlohmann::json body = {
+            {"teamId", teamId}
+    };
+    return apiDelete(apiUrl + "/teams/delete", body, apiToken);
+}
+
+ApiMessage Api::apiGetDirectoryById(const std::string &directoryId) {
+    qDebug() << "maybe here";
+    return apiGet(apiUrl + "/directories/" + directoryId, apiToken);
+}
+
+ApiMessage Api::apiGetPageById(const std::string &pageId) {
+    return apiGet(apiUrl + "/pages/" + pageId, apiToken);
+}
+
+ApiMessage Api::apiAddPage(const std::string &name, const std::string &team, const std::string &parentDirectory,
+                           const std::string &content) {
+    nlohmann::json body = {
+            {"name", name},
+            {"team", team},
+            {"parentDirectory", parentDirectory},
+            {"content", content}
+    };
+    ApiMessage message = apiPost(apiUrl + "/pages/create", body, apiToken);
+    qDebug() << QString::fromStdString(message.data.dump());
+    return message;
+}
+
+ApiMessage Api::apiAddDirectory(const std::string &name, const std::string &team, const std::string &parentDirectory) {
+    nlohmann::json body = {
+            {"name", name},
+            {"team", team},
+            {"parentDirectory", parentDirectory},
+    };
+    return apiPost(apiUrl + "/directories/create", body, apiToken);
+}
+
+void Api::setCurrentTeam(const std::string &currentTeam) {
+    this->currentTeam = currentTeam;
+}
+
+const std::string& Api::getCurrentTeam(){
+    return currentTeam;
+}
+
 

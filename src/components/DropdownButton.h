@@ -33,8 +33,10 @@ private:
     QMenu *userMenu_;
     QAction *logoutAction_;
     QAction *mySettingsAction_;
+    QAction *myTeamsAction_;
 
 signals:
+    void myTeamsOpened();
     void mySettingsOpened();
     void logedOut();
 };

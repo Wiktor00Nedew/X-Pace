@@ -15,9 +15,14 @@ DropdownButton::DropdownButton(QWidget *parent){
 }
 
 void DropdownButton::addActions() {
+    myTeamsAction_ = new QAction("Moje zespoły", this);
     mySettingsAction_ = new QAction("Ustawienia", this);
     logoutAction_ = new QAction("Wyloguj", this);
 
+
+    connect(myTeamsAction_, &QAction::triggered, this, [=](){
+        emit myTeamsOpened();
+    });
     connect(mySettingsAction_, &QAction::triggered, this, [=](){
         emit mySettingsOpened();
     });
@@ -32,6 +37,7 @@ void DropdownButton::setStyling() {
 
 void DropdownButton::addMenus() {
     userMenu_ = new QMenu();
+    userMenu_->addAction(myTeamsAction_);
     userMenu_->addAction(mySettingsAction_);
     userMenu_->addAction(logoutAction_);
 }

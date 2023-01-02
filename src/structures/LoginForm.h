@@ -22,6 +22,7 @@ public:
     void startLoading();
     void stopLoading();
     void setError(const std::string& key);
+    void clearBoxes();
 
 
 

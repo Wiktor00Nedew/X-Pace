@@ -18,6 +18,18 @@ QPushButton:pressed {
     border: 2px solid #F4F4F6;
 }
 
+QPushButton:focus {
+    outline: none;
+}
+
+QComboBox:focus {
+    outline: none;
+}
+
+QPushButton:disabled {
+    background-color: #5e5742;
+}
+
 QLineEdit {
     background-color: #E6E6E9;
     border: 2px solid #F0A202;
@@ -65,7 +77,7 @@ Button {
     font: 14px Rubik;
     padding: 5px;
     background-color: #354345;
-    border: none;
+    border: 2px solid #354345;
 }
 
 QMenu {
@@ -92,4 +104,26 @@ TopBar {
 
 QMessageBox {
     background-color: #333343;
+}
+
+QListWidget {
+    background-color: #354345;
+}
+
+QTreeWidget {
+    background-color: #354345;
+}
+
+QTreeWidget::item {
+    color: #F4F4F6;
+    font: 14px Rubik;
+}
+
+QTreeWidget QHeaderView::section {
+    background-color: #354345;
+    color: #F4F4F6;
+}
+
+QInputDialog {
+    background-color: #354345;
 }

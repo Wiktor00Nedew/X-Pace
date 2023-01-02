@@ -4,6 +4,7 @@
 
 #include "MessageBoxManager.h"
 #include <QPushButton>
+#include <QLineEdit>
 
 MessageBoxManager::MessageBoxManager(QWidget *parent){
 
@@ -56,8 +57,25 @@ bool MessageBoxManager::critical(const QString &title, const QString &body) {
 }
 
 bool MessageBoxManager::about(const QString &title, const QString &body) {
-    //for now empty, maybe will be used in the future
-    return false;
+    QMessageBox msBox;
+    msBox.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    msBox.setWindowTitle(title);
+    msBox.setText(body);
+
+    QPushButton *okButton = new QPushButton();
+    okButton->setText("Ok");
+    okButton->setMinimumWidth(50);
+    msBox.addButton(okButton, QMessageBox::ApplyRole);
+    msBox.exec();
+
+    if(msBox.clickedButton() == okButton){
+        delete okButton;
+        return true;
+    }
+    else {
+        delete okButton;
+        return false;
+    }
 }
 
 

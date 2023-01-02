@@ -94,3 +94,9 @@ void RegisterForm::stopLoading() {
 void RegisterForm::setError(const std::string &key) {
     errorLabel_->setError(key);
 }
+
+void RegisterForm::clearBoxes() {
+    usernameBox_->clear();
+    passwordBox_->clear();
+    emailBox_->clear();
+}

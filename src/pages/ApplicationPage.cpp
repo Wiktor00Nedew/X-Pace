@@ -25,10 +25,16 @@ void ApplicationPage::createComponents() {
     mainLayout_ = new QVBoxLayout();
     mainStack_ = new QStackedWidget();
     topBar_ = new TopBar();
-    pagesList_ = new QTreeWidget();
+    itemsList_ = new ItemsList();
+
+    myTeamsPage_ = new MyTeamsPage();
+    addTeamPage_ = new AddTeamPage();
+
+    mainStack_->addWidget(myTeamsPage_);
+    mainStack_->addWidget(addTeamPage_);
 
     mainSplitter_ = new QSplitter(Qt::Horizontal);
-    mainSplitter_->addWidget(pagesList_);
+    mainSplitter_->addWidget(itemsList_);
     mainSplitter_->addWidget(mainStack_);
 
     mainLayout_->addWidget(topBar_);
@@ -45,6 +51,12 @@ void ApplicationPage::setStyling() {
 
 void ApplicationPage::connectSignals() {
     connect(topBar_, &TopBar::logedOut, this, &ApplicationPage::onLogout);
+    connect(topBar_, &TopBar::myTeamsOpened, this, &ApplicationPage::onMyTeamsOpened);
+    connect(this, &ApplicationPage::myTeamsOpened, myTeamsPage_, &MyTeamsPage::loadTeams);
+    connect(myTeamsPage_, &MyTeamsPage::createTeamOpened, this, &ApplicationPage::onCreateTeamOpened);
+    connect(addTeamPage_, &AddTeamPage::addedTeam, this, &ApplicationPage::onAddedTeam);
+    connect(myTeamsPage_, &MyTeamsPage::teamDeleted, this, &ApplicationPage::onTeamDeleted);
+    connect(topBar_, &TopBar::teamChanged, this, &ApplicationPage::onTeamChanged);
 }
 
 void ApplicationPage::onLogout() {
@@ -73,7 +85,7 @@ void ApplicationPage::onLogin() {
     ApiMessage apiResponse;
 
     while(active){
-        apiResponse = Api::get().apiGetUserByToken();
+        apiResponse = Api::get().apiFetchUser();
         qDebug() << QString::fromStdString(to_string(apiResponse.data));
 
         if(apiResponse.type == ApiMessage::Error){
@@ -86,6 +98,40 @@ void ApplicationPage::onLogin() {
         }
         active = false;
     }
-    topBar_->setUsername(QString::fromStdString(apiResponse.data["username"]));
+    qDebug() << QString::fromStdString(to_string(apiResponse.data));
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+
+    topBar_->setUsername(QString::fromStdString(Api::get().getUser()["username"]));
+}
+
+void ApplicationPage::onMyTeamsOpened() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+    emit myTeamsOpened();
+}
+
+void ApplicationPage::onCreateTeamOpened() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(addTeamPage_));
+    emit createTeamOpened();
+}
+
+void ApplicationPage::onAddedTeam() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+    emit myTeamsOpened();
+}
+
+void ApplicationPage::onTeamDeleted() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+    emit myTeamsOpened();
+}
+
+void ApplicationPage::onTeamChanged(int currentIndex) {
+    if (currentIndex >= 0){
+        Api::get().setCurrentTeam(Api::get().getUser()["teams"][currentIndex]);
+        std::string team = Api::get().getUser()["teams"][currentIndex];
+        itemsList_->loadItems(team);
+    }
 }
 

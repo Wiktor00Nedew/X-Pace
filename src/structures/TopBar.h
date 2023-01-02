@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 #include "../components/DropdownButton.h"
+#include "../utilities/json.hpp"
 
 class TopBar : public QWidget{
     Q_OBJECT
@@ -15,6 +16,8 @@ public:
     ~TopBar();
 
     void setUsername(const QString &name);
+
+    void loadTeams(const nlohmann::json& teamsById);
 
 private:
     QHBoxLayout *mainLayout_;
@@ -27,5 +30,6 @@ private:
 
 signals:
     void logedOut();
-
+    void myTeamsOpened();
+    void teamChanged(int currentIndex);
 };

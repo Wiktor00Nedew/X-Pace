@@ -65,6 +65,7 @@ void LoginPage::onLogin(std::string login, std::string password) {
     emit changingToApplication();
     emit logedIn();
 
+    loginForm_->clearBoxes();
     loginForm_->stopLoading();
 }
 

@@ -85,3 +85,8 @@ void LoginForm::stopLoading() {
 void LoginForm::setError(const std::string &key) {
     errorLabel_->setError(key);
 }
+
+void LoginForm::clearBoxes() {
+    loginBox_->clear();
+    passwordBox_->clear();
+}

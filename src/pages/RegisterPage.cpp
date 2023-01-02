@@ -73,7 +73,7 @@ void RegisterPage::onRegister(std::string username, std::string email, std::stri
     emit changingToLogin();
 
     // TODO add popup, successful register
-
+    registerForm_->clearBoxes();
     registerForm_->stopLoading();
 
 }

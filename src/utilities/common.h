@@ -5,5 +5,7 @@
 #pragma once
 
 #include <map>
+#include <QIcon>
 
 extern std::map<std::string, std::string> APIErrors;
+

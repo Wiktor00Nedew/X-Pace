@@ -19,5 +19,16 @@ std::map<std::string, std::string> APIErrors = {
         {"ACCOUNT_DISABLED", "Odmowa dostępu."},
         {"EMAIL_IN_USE", "Email jest zajęty."},
         {"USERNAME_IN_USE", "Nazwa użytkownika jest zajęta."},
+        {"TEAM_NOT_FOUND", "Nie znaleziono zespołu."},
+        {"USER_ALREADY_REGISTERED", "Użytkownik już należy do zespołu."},
+        {"DIRECTORY_NOT_IN_TEAM", "Folder nie należy do tego zespołu."},
+        {"PAGE_NOT_FOUND", "Nie znaleziono strony."},
+        {"DIRECTORY_NOT_FOUND", "Nie znaleziono folderu."},
+        {"PAGE_NOT_IN_TEAM", "Strona nie należy do tego zespołu."},
+        {"USER_NOT_IN_TEAM", "Użytkownik nie należy do tego zespołu."},
+        {"MODERATOR_ALREADY_REGISTERED", "Użytkownik już jest moderatorem."},
+        {"OWNER_ALREADY_REGISTERED", "Użytkownik już jest właścicielem."},
+        {"PERMISSION_NOT_FOUND", "Nie znaleziono permisji."},
+        {"NO_NAME", "Podaj nazwę."},
         {"NO_ERROR", ""}
 };
