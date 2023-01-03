@@ -10,6 +10,8 @@
 #include "../components/MessageBoxManager.h"
 #include "../utilities/common.h"
 #include <QStringList>
+#include <QAction>
+#include <QMenu>
 
 void ItemsList::createComponents() {
     mainLayout_ = new QVBoxLayout();
@@ -120,6 +122,10 @@ void ItemsList::setStyling() {
     treeHeader_->setSectionsClickable(true);
     pagesList_->setHeaderLabels(namesList);
 
+    pagesList_->setContextMenuPolicy(Qt::CustomContextMenu);
+    pagesList_->setFocusPolicy(Qt::NoFocus);
+
+
 }
 
 void ItemsList::connectSignals() {
@@ -127,6 +133,8 @@ void ItemsList::connectSignals() {
     connect(treeWidgetButtons_, &TreeWidgetButtons::addPageButtonClicked, this, &ItemsList::addPage);
     connect(treeWidgetButtons_, &TreeWidgetButtons::addDirectoryButtonClicked, this, &ItemsList::addDirectory);
     connect(treeHeader_, &QHeaderView::sectionClicked, this, &ItemsList::clearSelection);
+
+    connect(pagesList_, &QTreeWidget::customContextMenuRequested, this, &ItemsList::prepareMenu);
 }
 
 void ItemsList::onItemClicked(QTreeWidgetItem *item, int column) {
@@ -335,6 +343,50 @@ void ItemsList::addDirectory() {
 void ItemsList::clearSelection() {
     qDebug() << "clear, magical clear";
     pagesList_->clearSelection();
+}
+
+void ItemsList::prepareMenu(const QPoint &pos) {
+    QTreeWidget *tree = pagesList_;
+
+    QTreeWidgetItem *nd = tree->itemAt( pos );
+
+    qDebug()<<pos<<nd->text(0);
+
+    QAction *newAct = new QAction(nd->text(3) == "false" ? "Usuń folder" : "Usuń plik", this);
+    newAct->setStatusTip(tr("new sth"));
+    connect(newAct, &QAction::triggered, this, [=](){
+        deleteItem(nd);
+    });
+
+
+    QMenu menu(this);
+    menu.addAction(newAct);
+
+    QPoint pt(pos);
+    menu.exec( tree->mapToGlobal(pos) );
+}
+
+void ItemsList::deleteItem(QTreeWidgetItem* item) {
+    if (item->text(3) == "false"){ // directory
+        ApiMessage apiResponse = Api::get().apiDeleteDirectory(item->text(1).toStdString());
+
+        if (apiResponse.type == ApiMessage::Error){
+            MessageBoxManager::get().about("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]));
+            return;
+        }
+
+        delete item;
+    }
+    else if (item->text(3) == "true"){ // page
+        ApiMessage apiResponse = Api::get().apiDeletePage(item->text(1).toStdString());
+
+        if (apiResponse.type == ApiMessage::Error){
+            MessageBoxManager::get().about("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]));
+            return;
+        }
+
+        delete item;
+    }
 }
 
 /*

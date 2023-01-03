@@ -22,7 +22,35 @@ QPushButton:focus {
     outline: none;
 }
 
-QComboBox:focus {
+QComboBox {
+    color: #F4F4F6;
+    font: 14px Rubik;
+    padding: 5px;
+    background-color: #354345;
+    border: 1px solid #F4F4F6;
+}
+
+QComboBox QListView::item {
+    color: #F4F4F6;
+    font: 14px Rubik;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #343a40;
+}
+
+QComboBox QListView::item:selected:!active {
+    background-color: #1c1e23;
+}
+
+QComboBox QListView::item:selected:active {
+    background-color: #1c1e23;
+}
+
+QComboBox QListView::item:hover {
+    background-color: #52575c;
+}
+
+QComboBox QAbstractItemView {
     outline: none;
 }
 
@@ -73,15 +101,16 @@ Title {
 }
 
 Button {
-    color: #FFFFFF;
+    color: #F4F4F6;
     font: 14px Rubik;
     padding: 5px;
     background-color: #354345;
     border: 2px solid #354345;
+    border-radius: 0px;
 }
 
 QMenu {
-    color: #FFFFFF;
+    color: #F4F4F6;
     font: 14px Rubik;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -108,6 +137,15 @@ QMessageBox {
 
 QListWidget {
     background-color: #354345;
+    outline: none;
+}
+
+QListWidget::item:hover {
+    background-color: #53696a;
+}
+
+QListWidget::item:selected {
+    background-color: #506466;
 }
 
 QTreeWidget {
@@ -117,6 +155,14 @@ QTreeWidget {
 QTreeWidget::item {
     color: #F4F4F6;
     font: 14px Rubik;
+}
+
+QTreeWidget::item:hover {
+    background-color: #53696a;
+}
+
+QTreeWidget::item:selected {
+    background-color: #506466;
 }
 
 QTreeWidget QHeaderView::section {

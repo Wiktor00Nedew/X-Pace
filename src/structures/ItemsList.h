@@ -41,4 +41,6 @@ public slots:
     void addPage();
     void addDirectory();
     void clearSelection();
+    void prepareMenu(const QPoint& pos);
+    void deleteItem(QTreeWidgetItem* item);
 };

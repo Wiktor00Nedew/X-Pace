@@ -48,6 +48,9 @@ void TopBar::connectSignals() {
 void TopBar::setStyling() {
     setFixedHeight(60);
     setAttribute(Qt::WA_StyledBackground);
+    teamMenu_->setFocusPolicy(Qt::NoFocus);
+    teamMenu_->setMinimumWidth(150);
+    //userMenu_->setMinimumHeight(50);
 }
 
 void TopBar::setUsername(const QString &name) {

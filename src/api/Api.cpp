@@ -269,4 +269,20 @@ const std::string& Api::getCurrentTeam(){
     return currentTeam;
 }
 
+ApiMessage Api::apiDeletePage(const std::string &pageId) {
+    nlohmann::json body = {
+            {"pageId", pageId}
+    };
+
+    return apiDelete(apiUrl + "/pages/delete", body, apiToken);
+}
+
+ApiMessage Api::apiDeleteDirectory(const std::string &directoryId) {
+    nlohmann::json body = {
+            {"directoryId", directoryId}
+    };
+
+    return apiDelete(apiUrl + "/directories/delete", body, apiToken);
+}
+
 
