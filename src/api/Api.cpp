@@ -303,4 +303,13 @@ ApiMessage Api::apiRenamePage(const std::string &pageId, const std::string &name
     return apiPatch(apiUrl + "/pages/name", body, apiToken);
 }
 
+ApiMessage Api::apiEditPage(const std::string &pageId, const std::string &content) {
+    nlohmann::json body = {
+            {"pageId", pageId},
+            {"content", content}
+    };
+
+    return apiPatch(apiUrl + "/pages/edit", body, apiToken);
+}
+
 

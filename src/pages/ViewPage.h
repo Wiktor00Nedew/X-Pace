@@ -17,6 +17,8 @@ public:
     ~ViewPage();
 
 private:
+    std::string pageId_;
+
     void createComponents();
     void setStyling();
     void connectSignals();
@@ -24,6 +26,12 @@ private:
     QVBoxLayout *mainLayout_;
 
     QTextEdit *markdownView_;
-    QPushButton *saveButton_;
+    QPushButton *editButton_;
 
+public slots:
+    void loadPage(const std::string& pageId);
+
+signals:
+    void editingPage(const std::string& pageId);
+    void settingDefaultPage();
 };

@@ -32,5 +32,22 @@ void PageReaderPage::setStyling() {
 }
 
 void PageReaderPage::connectSignals() {
+    connect(viewPage_, &ViewPage::editingPage, this, &PageReaderPage::onEditingPage);
+    connect(editPage_, &EditPage::finishingEditing, this, &PageReaderPage::onFinishingEditing);
+    connect(viewPage_, &ViewPage::settingDefaultPage, this, [=](){
+        emit settingDefaultPage();
+    });
+    connect(editPage_, &EditPage::settingDefaultPage, this, [=](){
+        emit settingDefaultPage();
+    });
+}
 
+void PageReaderPage::onEditingPage(const std::string& pageId) {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(editPage_));
+    editPage_->loadPage(pageId);
+}
+
+void PageReaderPage::onFinishingEditing(const std::string& pageId) {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(viewPage_));
+    viewPage_->loadPage(pageId);
 }

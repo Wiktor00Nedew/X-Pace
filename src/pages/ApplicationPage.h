@@ -13,6 +13,7 @@
 #include "MyTeamsPage.h"
 #include "AddTeamPage.h"
 #include "../structures/ItemsList.h"
+#include "PageReaderPage.h"
 
 class ApplicationPage : public QWidget{
     Q_OBJECT
@@ -25,6 +26,8 @@ public:
     void connectSignals();
 
 private:
+    bool isAllSaved;
+
     QVBoxLayout *mainLayout_;
 
     QSplitter *mainSplitter_;
@@ -36,6 +39,8 @@ private:
 
     MyTeamsPage *myTeamsPage_;
     AddTeamPage *addTeamPage_;
+    PageReaderPage *pageReaderPage_;
+    QWidget *defaultPage_;
 
 public slots:
     void onLogout();
@@ -45,6 +50,7 @@ public slots:
     void onAddedTeam();
     void onTeamDeleted();
     void onTeamChanged(int currentIndex);
+    void onSettingDefaultPage();
 
 signals:
     void logedOut();

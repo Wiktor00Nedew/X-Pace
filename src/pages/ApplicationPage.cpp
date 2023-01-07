@@ -15,6 +15,8 @@ ApplicationPage::ApplicationPage(QWidget *parent) {
     setStyling();
 
     setLayout(mainLayout_);
+
+    isAllSaved = true; // TODO add opening page on click on tree widget and change this var adequately
 }
 
 ApplicationPage::~ApplicationPage() {
@@ -29,9 +31,13 @@ void ApplicationPage::createComponents() {
 
     myTeamsPage_ = new MyTeamsPage();
     addTeamPage_ = new AddTeamPage();
+    pageReaderPage_ = new PageReaderPage();
+    defaultPage_ = new QWidget();
 
     mainStack_->addWidget(myTeamsPage_);
     mainStack_->addWidget(addTeamPage_);
+    mainStack_->addWidget(pageReaderPage_);
+    mainStack_->addWidget(defaultPage_);
 
     mainSplitter_ = new QSplitter(Qt::Horizontal);
     mainSplitter_->addWidget(itemsList_);
@@ -42,6 +48,7 @@ void ApplicationPage::createComponents() {
 }
 
 void ApplicationPage::setStyling() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(defaultPage_));
     mainLayout_->setSpacing(0);
     mainLayout_->setContentsMargins(0, 0, 0, 0);
 
@@ -57,6 +64,7 @@ void ApplicationPage::connectSignals() {
     connect(addTeamPage_, &AddTeamPage::addedTeam, this, &ApplicationPage::onAddedTeam);
     connect(myTeamsPage_, &MyTeamsPage::teamDeleted, this, &ApplicationPage::onTeamDeleted);
     connect(topBar_, &TopBar::teamChanged, this, &ApplicationPage::onTeamChanged);
+    connect(pageReaderPage_, &PageReaderPage::settingDefaultPage, this, &ApplicationPage::onSettingDefaultPage);
 }
 
 void ApplicationPage::onLogout() {
@@ -133,5 +141,9 @@ void ApplicationPage::onTeamChanged(int currentIndex) {
         std::string team = Api::get().getUser()["teams"][currentIndex];
         itemsList_->loadItems(team);
     }
+}
+
+void ApplicationPage::onSettingDefaultPage() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(defaultPage_));
 }
 

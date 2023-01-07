@@ -30,4 +30,11 @@ private:
     ViewPage *viewPage_;
     EditPage *editPage_;
 
+public slots:
+    void onEditingPage(const std::string& pageId);
+    void onFinishingEditing(const std::string& pageId);
+
+signals:
+    void settingDefaultPage();
+
 };
