@@ -43,4 +43,5 @@ public slots:
     void clearSelection();
     void prepareMenu(const QPoint& pos);
     void deleteItem(QTreeWidgetItem* item);
+    void renameItem(QTreeWidgetItem* item);
 };

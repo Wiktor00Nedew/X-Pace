@@ -44,6 +44,8 @@ public:
     ApiMessage apiAddDirectory(const std::string& name, const std::string& team, const std::string& parentDirectory);
     ApiMessage apiDeletePage(const std::string& pageId);
     ApiMessage apiDeleteDirectory(const std::string& directoryId);
+    ApiMessage apiRenameDirectory(const std::string& directoryId, const std::string& name);
+    ApiMessage apiRenamePage(const std::string& pageId, const std::string& name);
 
 
     nlohmann::json getUser();

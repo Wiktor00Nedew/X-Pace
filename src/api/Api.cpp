@@ -285,4 +285,22 @@ ApiMessage Api::apiDeleteDirectory(const std::string &directoryId) {
     return apiDelete(apiUrl + "/directories/delete", body, apiToken);
 }
 
+ApiMessage Api::apiRenameDirectory(const std::string &directoryId, const std::string &name) {
+    nlohmann::json body = {
+            {"directoryId", directoryId},
+            {"name", name}
+    };
+
+    return apiPatch(apiUrl + "/directories/name", body, apiToken);
+}
+
+ApiMessage Api::apiRenamePage(const std::string &pageId, const std::string &name) {
+    nlohmann::json body = {
+            {"pageId", pageId},
+            {"name", name}
+    };
+
+    return apiPatch(apiUrl + "/pages/name", body, apiToken);
+}
+
 

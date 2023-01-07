@@ -352,15 +352,21 @@ void ItemsList::prepareMenu(const QPoint &pos) {
 
     qDebug()<<pos<<nd->text(0);
 
-    QAction *newAct = new QAction(nd->text(3) == "false" ? "Usuń folder" : "Usuń plik", this);
-    newAct->setStatusTip(tr("new sth"));
-    connect(newAct, &QAction::triggered, this, [=](){
+    QAction *delAct = new QAction(nd->text(3) == "false" ? "Usuń folder" : "Usuń plik", this);
+    QAction *renameAct = new QAction("Zmień nazwę", this);
+    delAct->setStatusTip(tr("Usuń"));
+    renameAct->setStatusTip(tr("Zmień nazwę"));
+    connect(delAct, &QAction::triggered, this, [=](){
         deleteItem(nd);
+    });
+    connect(renameAct, &QAction::triggered, this, [=](){
+        renameItem(nd);
     });
 
 
     QMenu menu(this);
-    menu.addAction(newAct);
+    menu.addAction(renameAct);
+    menu.addAction(delAct);
 
     QPoint pt(pos);
     menu.exec( tree->mapToGlobal(pos) );
@@ -386,6 +392,46 @@ void ItemsList::deleteItem(QTreeWidgetItem* item) {
         }
 
         delete item;
+    }
+}
+
+void ItemsList::renameItem(QTreeWidgetItem *item) {
+    if (item->text(3) == "false"){ // directory
+        bool ok;
+
+        QString name = QInputDialog::getText(0, "Zmień nazwę folderu",
+                                             "Nazwa folder:", QLineEdit::Normal,
+                                             item->text(0), &ok);
+
+        if (!ok)
+            return;
+
+        ApiMessage apiResponse = Api::get().apiRenameDirectory(item->text(1).toStdString(), name.toStdString());
+
+        if (apiResponse.type == ApiMessage::Error){
+            MessageBoxManager::get().about("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]));
+            return;
+        }
+
+        item->setText(0, QString::fromStdString(apiResponse.data["name"]));
+    }
+    else if (item->text(3) == "true"){ // page
+        bool ok;
+
+        QString name = QInputDialog::getText(0, "Zmień nazwę strony",
+                                             "Nazwa strony:", QLineEdit::Normal,
+                                             item->text(0), &ok);
+
+        if (!ok)
+            return;
+        ApiMessage apiResponse = Api::get().apiRenamePage(item->text(1).toStdString(), name.toStdString());
+
+        if (apiResponse.type == ApiMessage::Error){
+            MessageBoxManager::get().about("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]));
+            return;
+        }
+
+        item->setText(0, QString::fromStdString(apiResponse.data["name"]));
     }
 }
 
