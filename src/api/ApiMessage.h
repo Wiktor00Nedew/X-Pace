@@ -25,7 +25,7 @@ struct ApiMessage{
 
     // messageData = data / error message [key]
     ApiMessage(nlohmann::json apiResponse, int status){
-        qDebug() << QString::fromStdString(apiResponse.dump());
+        //qDebug() << QString::fromStdString(apiResponse.dump());
         if(status >= 200 && status <= 299){
             type = NoError;
             //qDebug() << QString::fromStdString(to_string(apiResponse));

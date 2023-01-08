@@ -41,13 +41,13 @@ void MyTeamsPage::connectSignals() {
 
 void MyTeamsPage::loadTeams() {
     teamsList_->clear();
-    qDebug() << "testing";
+    //qDebug() << "testing";
     auto teamsById = Api::get().getUser()["teams"];
 
     for (auto team : teamsById){
         bool active = true;
         ApiMessage apiResponse;
-        qDebug() << "more testing";
+        //qDebug() << "more testing";
         while(active){
             apiResponse = Api::get().apiGetTeamById(team);
 
@@ -102,13 +102,15 @@ void MyTeamsPage::loadTeams() {
                 isOwner = true;
         }
 
-        qDebug() << isModerator << " " << isOwner;
+        //qDebug() << isModerator << " " << isOwner;
 
         auto widget = new TeamListItem(QString::fromStdString(apiResponse.data["id"]), QString::fromStdString(apiResponse.data["name"]), QString::fromStdString(apiResponse.data["createdAt"]), membersString, moderatorsString, ownersString, isModerator, isOwner, this);
 
         connect(widget, &TeamListItem::deletedTeam, this, [=](){
             emit teamDeleted();
         });
+
+        connect(widget, &TeamListItem::manageTeamButtonClicked, this, &MyTeamsPage::onManageTeamButtonClicked);
 
         QListWidgetItem *item = new QListWidgetItem();
         item->setSizeHint(widget->sizeHint());
@@ -117,5 +119,10 @@ void MyTeamsPage::loadTeams() {
         teamsList_->setItemWidget(item, widget);
 
     }
+}
+
+void MyTeamsPage::onManageTeamButtonClicked(const QString &teamId) {
+    std::string modifiedTeamId = teamId.toStdString();
+    emit manageTeamOpened(modifiedTeamId.erase(0, 4));
 }
 

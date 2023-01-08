@@ -33,7 +33,7 @@ ApiMessage Api::apiPost(const std::string& url, const nlohmann::json& params, co
     int statusCode = statusHeader.toInt();
 
     if(!statusHeader.isValid()){
-        qDebug() << "empty";
+        //qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
         statusCode = 404;
     }
@@ -74,7 +74,7 @@ ApiMessage Api::apiPatch(const std::string& url, const nlohmann::json& params, c
     int statusCode = statusHeader.toInt();
 
     if(!statusHeader.isValid()){
-        qDebug() << "empty";
+        //qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
         statusCode = 404;
     }
@@ -112,7 +112,7 @@ ApiMessage Api::apiDelete(const std::string& url, const nlohmann::json& params, 
     int statusCode = statusHeader.toInt();
 
     if(!statusHeader.isValid()){
-        qDebug() << "empty";
+        //qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
         statusCode = 404;
     }
@@ -148,12 +148,12 @@ ApiMessage Api::apiGet(const std::string& url, const std::string& authToken) {
     int statusCode = statusHeader.toInt();
 
     if(!statusHeader.isValid()){
-        qDebug() << "empty";
+        //qDebug() << "empty";
         apiResponse = "{\"status\":404,\"message\":\"RouteNotFound\"}";
         statusCode = 404;
     }
 
-    qDebug() << QString::fromStdString(apiResponse);
+    //qDebug() << QString::fromStdString(apiResponse);
 
     if(statusHeader.isValid() && apiResponse.empty()){
         apiResponse = "{\"data\":\"no\"}";
@@ -233,7 +233,7 @@ ApiMessage Api::apiDeleteTeam(const std::string &teamId) {
 }
 
 ApiMessage Api::apiGetDirectoryById(const std::string &directoryId) {
-    qDebug() << "maybe here";
+    //qDebug() << "maybe here";
     return apiGet(apiUrl + "/directories/" + directoryId, apiToken);
 }
 
@@ -250,7 +250,7 @@ ApiMessage Api::apiAddPage(const std::string &name, const std::string &team, con
             {"content", content}
     };
     ApiMessage message = apiPost(apiUrl + "/pages/create", body, apiToken);
-    qDebug() << QString::fromStdString(message.data.dump());
+    //qDebug() << QString::fromStdString(message.data.dump());
     return message;
 }
 
@@ -316,6 +316,47 @@ ApiMessage Api::apiEditPage(const std::string &pageId, const std::string &conten
 
 ApiMessage Api::apiGetNameForUserById(const std::string &id) {
     return apiGet(apiUrl + "/users/name/" + id);
+}
+
+ApiMessage Api::apiRenameTeam(const std::string &teamId, const std::string &name) {
+    nlohmann::json body = {
+            {"teamId", teamId},
+            {"name", name}
+    };
+
+    return apiPatch(apiUrl + "/teams/name", body, apiToken);
+}
+
+ApiMessage Api::apiGenerateMemberCode(const std::string &teamId) {
+    nlohmann::json body = {
+            {"teamId", teamId}
+    };
+
+    return apiPost(apiUrl + "/teams/member", body, apiToken);
+}
+
+ApiMessage Api::apiGenerateModeratorCode(const std::string &teamId) {
+    nlohmann::json body = {
+            {"teamId", teamId}
+    };
+
+    return apiPost(apiUrl + "/teams/moderator", body, apiToken);
+}
+
+ApiMessage Api::apiGenerateOwnerCode(const std::string &teamId) {
+    nlohmann::json body = {
+            {"teamId", teamId}
+    };
+
+    return apiPost(apiUrl + "/teams/owner", body, apiToken);
+}
+
+ApiMessage Api::apiJoinTeam(const std::string &teamToken) {
+    nlohmann::json body = {
+            {"tokenId", teamToken}
+    };
+
+    return apiPost(apiUrl + "/teams/token/register", body, apiToken);
 }
 
 

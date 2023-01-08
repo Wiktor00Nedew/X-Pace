@@ -80,7 +80,7 @@ void TeamListItem::deleteTeam() {
 
     while(active){
         apiResponse = Api::get().apiDeleteTeam(teamId);
-        qDebug() << QString::fromStdString(to_string(apiResponse.data));
+        //qDebug() << QString::fromStdString(to_string(apiResponse.data));
 
         if(apiResponse.type == ApiMessage::Error){
             bool chosenOption2 = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]) + "\n"
@@ -98,7 +98,7 @@ void TeamListItem::deleteTeam() {
 
     while(active2){
         apiResponse2 = Api::get().apiFetchUser();
-        qDebug() << QString::fromStdString(to_string(apiResponse2.data));
+        //qDebug() << QString::fromStdString(to_string(apiResponse2.data));
 
         if(apiResponse2.type == ApiMessage::Error){
             bool chosenOption2 = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse2.data["key"]]) + "\n"

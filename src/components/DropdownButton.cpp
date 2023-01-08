@@ -38,7 +38,7 @@ void DropdownButton::setStyling() {
 void DropdownButton::addMenus() {
     userMenu_ = new QMenu();
     userMenu_->addAction(myTeamsAction_);
-    userMenu_->addAction(mySettingsAction_);
+    //userMenu_->addAction(mySettingsAction_);
     userMenu_->addAction(logoutAction_);
 }
 

@@ -48,6 +48,12 @@ public:
     ApiMessage apiRenamePage(const std::string& pageId, const std::string& name);
     ApiMessage apiEditPage(const std::string& pageId, const std::string& content);
     ApiMessage apiGetNameForUserById(const std::string& id);
+    ApiMessage apiRenameTeam(const std::string& teamId, const std::string& name);
+    ApiMessage apiGenerateMemberCode(const std::string& teamId);
+    ApiMessage apiGenerateModeratorCode(const std::string& teamId);
+    ApiMessage apiGenerateOwnerCode(const std::string& teamId);
+    ApiMessage apiJoinTeam(const std::string& teamToken);
+
 
 
     nlohmann::json getUser();

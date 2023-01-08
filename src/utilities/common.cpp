@@ -30,5 +30,6 @@ std::map<std::string, std::string> APIErrors = {
         {"OWNER_ALREADY_REGISTERED", "Użytkownik już jest właścicielem."},
         {"PERMISSION_NOT_FOUND", "Nie znaleziono permisji."},
         {"NO_NAME", "Podaj nazwę."},
+        {"NO_TOKEN", "Podaj kod dołączenia."},
         {"NO_ERROR", ""}
 };

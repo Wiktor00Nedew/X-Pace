@@ -14,6 +14,8 @@
 #include "AddTeamPage.h"
 #include "../structures/ItemsList.h"
 #include "PageReaderPage.h"
+#include "ManageTeamPage.h"
+#include "JoinTeamPage.h"
 
 class ApplicationPage : public QWidget{
     Q_OBJECT
@@ -41,6 +43,8 @@ private:
     AddTeamPage *addTeamPage_;
     PageReaderPage *pageReaderPage_;
     QWidget *defaultPage_;
+    ManageTeamPage *manageTeamsPage_;
+    JoinTeamPage *joinTeamPage_;
 
 public slots:
     void onLogout();
@@ -54,6 +58,10 @@ public slots:
     void onPageOpened(const std::string& pageId);
     void onUnsavedChanges();
     void onChangesSaved();
+    void onManageTeamsOpened(const std::string& teamId);
+    void onTeamNameChanged();
+    void onJoinedTeam();
+    void onChangingToJoinTeam();
 
 signals:
     void logedOut();

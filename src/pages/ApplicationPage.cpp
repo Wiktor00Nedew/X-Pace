@@ -33,11 +33,16 @@ void ApplicationPage::createComponents() {
     addTeamPage_ = new AddTeamPage();
     pageReaderPage_ = new PageReaderPage();
     defaultPage_ = new QWidget();
+    manageTeamsPage_ = new ManageTeamPage();
+    joinTeamPage_ = new JoinTeamPage();
 
     mainStack_->addWidget(myTeamsPage_);
     mainStack_->addWidget(addTeamPage_);
     mainStack_->addWidget(pageReaderPage_);
     mainStack_->addWidget(defaultPage_);
+    mainStack_->addWidget(manageTeamsPage_);
+    mainStack_->addWidget(joinTeamPage_);
+
 
     mainSplitter_ = new QSplitter(Qt::Horizontal);
     mainSplitter_->addWidget(itemsList_);
@@ -62,12 +67,18 @@ void ApplicationPage::connectSignals() {
     connect(this, &ApplicationPage::myTeamsOpened, myTeamsPage_, &MyTeamsPage::loadTeams);
     connect(myTeamsPage_, &MyTeamsPage::createTeamOpened, this, &ApplicationPage::onCreateTeamOpened);
     connect(addTeamPage_, &AddTeamPage::addedTeam, this, &ApplicationPage::onAddedTeam);
+    connect(joinTeamPage_, &JoinTeamPage::joinedTeam, this, &ApplicationPage::onJoinedTeam);
     connect(myTeamsPage_, &MyTeamsPage::teamDeleted, this, &ApplicationPage::onTeamDeleted);
     connect(topBar_, &TopBar::teamChanged, this, &ApplicationPage::onTeamChanged);
     connect(pageReaderPage_, &PageReaderPage::settingDefaultPage, this, &ApplicationPage::onSettingDefaultPage);
     connect(itemsList_, &ItemsList::pageOpened, this, &ApplicationPage::onPageOpened);
     connect(pageReaderPage_, &PageReaderPage::unsavedChanges, this, &ApplicationPage::onUnsavedChanges);
     connect(pageReaderPage_, &PageReaderPage::changesSaved, this, &ApplicationPage::onChangesSaved);
+    connect(manageTeamsPage_, &ManageTeamPage::setMyTeamsPage, this, &ApplicationPage::onMyTeamsOpened);
+    connect(myTeamsPage_, &MyTeamsPage::manageTeamOpened, this, &ApplicationPage::onManageTeamsOpened);
+    connect(manageTeamsPage_, &ManageTeamPage::teamNameChanged, this, &ApplicationPage::onTeamNameChanged);
+    connect(addTeamPage_, &AddTeamPage::changingToJoinTeam, this, &ApplicationPage::onChangingToJoinTeam);
+    connect(joinTeamPage_, &JoinTeamPage::changingToAddTeam, this, &ApplicationPage::onCreateTeamOpened);
 }
 
 void ApplicationPage::onLogout() {
@@ -103,7 +114,7 @@ void ApplicationPage::onLogin() {
 
     while(active){
         apiResponse = Api::get().apiFetchUser();
-        qDebug() << QString::fromStdString(to_string(apiResponse.data));
+        //qDebug() << QString::fromStdString(to_string(apiResponse.data));
 
         if(apiResponse.type == ApiMessage::Error){
             bool chosenOption = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]) + "\n"
@@ -115,7 +126,7 @@ void ApplicationPage::onLogin() {
         }
         active = false;
     }
-    qDebug() << QString::fromStdString(to_string(apiResponse.data));
+    //qDebug() << QString::fromStdString(to_string(apiResponse.data));
     topBar_->loadTeams(Api::get().getUser()["teams"]);
 
     topBar_->setUsername(QString::fromStdString(Api::get().getUser()["username"]));
@@ -175,5 +186,24 @@ void ApplicationPage::onUnsavedChanges() {
 
 void ApplicationPage::onChangesSaved() {
     isAllSaved = true;
+}
+
+void ApplicationPage::onManageTeamsOpened(const std::string &teamId) {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(manageTeamsPage_));
+    manageTeamsPage_->loadTeamInfo(teamId);
+}
+
+void ApplicationPage::onTeamNameChanged() {
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+}
+
+void ApplicationPage::onJoinedTeam() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
+    topBar_->loadTeams(Api::get().getUser()["teams"]);
+    emit myTeamsOpened();
+}
+
+void ApplicationPage::onChangingToJoinTeam() {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(joinTeamPage_));
 }
 

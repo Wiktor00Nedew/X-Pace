@@ -59,17 +59,17 @@ void TopBar::setUsername(const QString &name) {
 
 void TopBar::loadTeams(const nlohmann::json& teamsById) {
     teamMenu_->clear();
-    qDebug() << "here";
+    //qDebug() << "here";
     for (auto team : teamsById){
         bool active = true;
         ApiMessage apiResponse;
-        qDebug() << "here3";
+        //qDebug() << "here3";
 
         while(active){
-            qDebug() << QString::fromStdString(team);
+            //qDebug() << QString::fromStdString(team);
             apiResponse = Api::get().apiGetTeamById(team);
-            qDebug() << QString::fromStdString(to_string(apiResponse.data));
-            qDebug() << "here2";
+            //qDebug() << QString::fromStdString(to_string(apiResponse.data));
+            //qDebug() << "here2";
 
             if(apiResponse.type == ApiMessage::Error){
                 bool chosenOption = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]) + "\n"

@@ -2,12 +2,12 @@
 // Created by Wiktor on 01.01.2023.
 //
 
-#include "AddTeamPage.h"
+#include "JoinTeamPage.h"
 #include "../api/Api.h"
 #include "../utilities/common.h"
 #include "../components/MessageBoxManager.h"
 
-AddTeamPage::AddTeamPage(QWidget *parent) {
+JoinTeamPage::JoinTeamPage(QWidget *parent) {
     createComponents();
     setStyling();
     connectSignals();
@@ -15,55 +15,56 @@ AddTeamPage::AddTeamPage(QWidget *parent) {
     setLayout(mainLayout_);
 }
 
-AddTeamPage::~AddTeamPage() {
+JoinTeamPage::~JoinTeamPage() {
 
 }
 
-void AddTeamPage::createComponents() {
+void JoinTeamPage::createComponents() {
     mainLayout_ = new QVBoxLayout();
     title_ = new Title();
-    nameLabel_ = new QLabel();
-    nameBox_ = new QLineEdit();
-    addTeamButton_ = new QPushButton();
+    tokenLabel_ = new QLabel();
+    tokenBox_ = new QLineEdit();
+    joinTeamButton_ = new QPushButton();
     loadingIndicator_ = new LoadingIndicator();
     errorLabel_ = new ErrorLabel();
-    joinRedirect_ = new ClickableLabel();
+    addTeamRedirect_ = new ClickableLabel();
 
     mainLayout_->addWidget(title_);
-    mainLayout_->addWidget(nameLabel_);
-    mainLayout_->addWidget(nameBox_);
-    mainLayout_->addWidget(addTeamButton_);
-    mainLayout_->addWidget(joinRedirect_);
+    mainLayout_->addWidget(tokenLabel_);
+    mainLayout_->addWidget(tokenBox_);
+    mainLayout_->addWidget(joinTeamButton_);
+    mainLayout_->addWidget(addTeamRedirect_);
     mainLayout_->addWidget(loadingIndicator_);
     mainLayout_->addWidget(errorLabel_);
     mainLayout_->addStretch();
 }
 
-void AddTeamPage::setStyling() {
-    nameLabel_->setText("Nazwa zespołu");
-    addTeamButton_->setText("Stwórz nowy zespół");
-    title_->setText("Stwórz nowy zespół");\
-    joinRedirect_->setAlignment(Qt::AlignHCenter);
-    joinRedirect_->setText("Lub dołącz do zespołu");
+void JoinTeamPage::setStyling() {
+    tokenLabel_->setText("Kod dołączenia");
+    joinTeamButton_->setText("Dołącz do zespołu");
+    title_->setText("Dołącz do zespołu");
+
+    addTeamRedirect_->setText("Lub stwórz nowy zespół");
+    addTeamRedirect_->setAlignment(Qt::AlignHCenter);
 }
 
-void AddTeamPage::connectSignals() {
-    connect(addTeamButton_, &QPushButton::clicked, this, &AddTeamPage::addTeam);
-    connect(joinRedirect_, &ClickableLabel::clicked, this, [=](){
-        emit changingToJoinTeam();
+void JoinTeamPage::connectSignals() {
+    connect(joinTeamButton_, &QPushButton::clicked, this, &JoinTeamPage::joinTeam);
+    connect(addTeamRedirect_, &ClickableLabel::clicked, this, [=](){
+        emit changingToAddTeam();
     });
 }
 
-void AddTeamPage::addTeam() {
+void JoinTeamPage::joinTeam() {
     loadingIndicator_->show();
 
-    if (nameBox_->text() == ""){
+    if (tokenBox_->text() == ""){
         loadingIndicator_->hide();
-        errorLabel_->setError("NO_NAME");
+        errorLabel_->setError("NO_TOKEN");
         return;
     }
 
-    auto apiResponse = Api::get().apiCreateTeam(nameBox_->text().toStdString());
+    auto apiResponse = Api::get().apiJoinTeam(tokenBox_->text().toStdString());
 
     if (apiResponse.type == ApiMessage::Error){
         loadingIndicator_->hide();
@@ -91,8 +92,8 @@ void AddTeamPage::addTeam() {
 
     errorLabel_->setError("NO_ERROR");
 
-    emit addedTeam();
+    emit joinedTeam();
 
-    nameBox_->clear();
+    tokenBox_->clear();
     loadingIndicator_->hide();
 }

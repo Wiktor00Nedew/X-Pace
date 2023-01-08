@@ -15,11 +15,11 @@
 #include "../components/LoadingIndicator.h"
 #include "../components/ClickableLabel.h"
 
-class AddTeamPage : public QWidget{
+class JoinTeamPage : public QWidget{
     Q_OBJECT
 public:
-    explicit AddTeamPage(QWidget *parent = nullptr);
-    ~AddTeamPage();
+    explicit JoinTeamPage(QWidget *parent = nullptr);
+    ~JoinTeamPage();
 
     void createComponents();
     void setStyling();
@@ -30,18 +30,18 @@ private:
     QVBoxLayout *mainLayout_;
 
     Title *title_;
-    QLabel *nameLabel_;
-    QLineEdit *nameBox_;
-    QPushButton *addTeamButton_;
+    QLabel *tokenLabel_;
+    QLineEdit *tokenBox_;
+    QPushButton *joinTeamButton_;
     ErrorLabel *errorLabel_;
     LoadingIndicator *loadingIndicator_;
-    ClickableLabel *joinRedirect_;
+    ClickableLabel *addTeamRedirect_;
 
 public slots:
-    void addTeam();
+    void joinTeam();
 
 signals:
-    void addedTeam();
-    void changingToJoinTeam();
+    void joinedTeam();
+    void changingToAddTeam();
 
 };

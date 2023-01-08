@@ -59,7 +59,7 @@ void ItemsList::loadItems(const std::string &teamId) {
 
     for (auto mainItem : apiResponse.data["items"]){
         if (mainItem["isPage"]){
-            qDebug() << "if";
+            //qDebug() << "if";
             ApiMessage apiResponse2 = Api::get().apiGetPageById(mainItem["id"]);
 
             if (apiResponse2.type == ApiMessage::NoError){
@@ -152,10 +152,10 @@ void ItemsList::onItemClicked(QTreeWidgetItem *item, int column) {
             return;
         }
 
-        qDebug() << "before for";
+        //qDebug() << "before for";
 
         for (auto directoryItem : apiResponse.data["items"]){
-            qDebug() << "in for";
+            //qDebug() << "in for";
             if (directoryItem["isPage"]){
                 ApiMessage apiResponse2 = Api::get().apiGetPageById(directoryItem["id"]);
 
@@ -236,8 +236,8 @@ void ItemsList::addPage() {
     else
         chosenItem = selectedItem->parent();
 
-    if (chosenItem != nullptr)
-        qDebug() << chosenItem->text(0);
+//    if (chosenItem != nullptr)
+//        qDebug() << chosenItem->text(0);
 
     if (chosenItem == nullptr){
         ApiMessage apiResponse = Api::get().apiAddPage(name.toStdString(), Api::get().getCurrentTeam(), "root");
@@ -301,8 +301,8 @@ void ItemsList::addDirectory() {
     else
         chosenItem = selectedItem->parent();
 
-    if (chosenItem != nullptr)
-        qDebug() << chosenItem->text(0);
+//    if (chosenItem != nullptr)
+//        qDebug() << chosenItem->text(0);
 
     if (chosenItem == nullptr){
         ApiMessage apiResponse = Api::get().apiAddDirectory(name.toStdString(), Api::get().getCurrentTeam(), "root");
@@ -341,7 +341,7 @@ void ItemsList::addDirectory() {
 }
 
 void ItemsList::clearSelection() {
-    qDebug() << "clear, magical clear";
+    //qDebug() << "clear, magical clear";
     pagesList_->clearSelection();
 }
 
@@ -350,7 +350,7 @@ void ItemsList::prepareMenu(const QPoint &pos) {
 
     QTreeWidgetItem *nd = tree->itemAt( pos );
 
-    qDebug()<<pos<<nd->text(0);
+    //qDebug()<<pos<<nd->text(0);
 
     QAction *delAct = new QAction(nd->text(3) == "false" ? "Usuń folder" : "Usuń plik", this);
     QAction *renameAct = new QAction("Zmień nazwę", this);

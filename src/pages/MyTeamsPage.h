@@ -28,8 +28,10 @@ private:
 
 public slots:
     void loadTeams();
+    void onManageTeamButtonClicked(const QString& teamId);
 
 signals:
     void createTeamOpened();
     void teamDeleted();
+    void manageTeamOpened(const std::string& teamId);
 };
