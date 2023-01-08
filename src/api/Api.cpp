@@ -153,6 +153,8 @@ ApiMessage Api::apiGet(const std::string& url, const std::string& authToken) {
         statusCode = 404;
     }
 
+    qDebug() << QString::fromStdString(apiResponse);
+
     if(statusHeader.isValid() && apiResponse.empty()){
         apiResponse = "{\"data\":\"no\"}";
     }
@@ -310,6 +312,10 @@ ApiMessage Api::apiEditPage(const std::string &pageId, const std::string &conten
     };
 
     return apiPatch(apiUrl + "/pages/edit", body, apiToken);
+}
+
+ApiMessage Api::apiGetNameForUserById(const std::string &id) {
+    return apiGet(apiUrl + "/users/name/" + id);
 }
 
 

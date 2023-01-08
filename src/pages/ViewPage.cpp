@@ -23,7 +23,7 @@ ViewPage::~ViewPage() {
 void ViewPage::createComponents() {
     mainLayout_ = new QVBoxLayout();
 
-    markdownView_ = new QTextEdit();
+    markdownView_ = new QTextBrowser();
     editButton_ = new QPushButton();
 
     mainLayout_->addWidget(markdownView_);
@@ -34,7 +34,8 @@ void ViewPage::setStyling() {
     editButton_->setText("Edytuj stronę");
     markdownView_->setReadOnly(true);
 
-    markdownView_->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    markdownView_->setOpenExternalLinks(true);
+    markdownView_->setOpenLinks(true);
 }
 
 void ViewPage::connectSignals() {

@@ -64,7 +64,7 @@ TeamListItem::TeamListItem(const QString &id, const QString &name, const QString
         buttons_->setDisableManage(true);
 
     if (!isOwner)
-        buttons_->setDisableManage(true);
+        buttons_->setDisableDelete(true);
 
     setLayout(mainLayout_);
 }

@@ -28,6 +28,7 @@ void EditPage::setStyling() {
 
 void EditPage::connectSignals() {
     connect(cancelButton_, &QPushButton::clicked, this, [=](){
+        emit changesSaved();
         emit finishingEditing(pageId_);
     });
     connect(saveButton_, &QPushButton::clicked, this, &EditPage::onSaveButtonClicked);

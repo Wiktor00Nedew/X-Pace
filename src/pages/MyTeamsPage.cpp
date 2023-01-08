@@ -69,19 +69,34 @@ void MyTeamsPage::loadTeams() {
         bool isOwner = false;
 
         for (auto member : apiResponse.data["members"]){
-            membersString += QString::fromStdString(member);
+            auto apiMessage = Api::get().apiGetNameForUserById(member);
+
+            if (apiMessage.type == ApiMessage::Error)
+                continue;
+
+            membersString += QString::fromStdString(apiMessage.data["name"]);
             membersString += ", ";
         }
 
         for (auto moderator : apiResponse.data["moderators"]){
-            moderatorsString += QString::fromStdString(moderator);
+            auto apiMessage = Api::get().apiGetNameForUserById(moderator);
+
+            if (apiMessage.type == ApiMessage::Error)
+                continue;
+
+            moderatorsString += QString::fromStdString(apiMessage.data["name"]);
             moderatorsString += ", ";
             if (moderator == Api::get().getUser()["id"])
                 isModerator = true;
         }
 
         for (auto owner : apiResponse.data["owners"]){
-            ownersString += QString::fromStdString(owner);
+            auto apiMessage = Api::get().apiGetNameForUserById(owner);
+
+            if (apiMessage.type == ApiMessage::Error)
+                continue;
+
+            ownersString += QString::fromStdString(apiMessage.data["name"]);
             ownersString += ", ";
             if (owner == Api::get().getUser()["id"])
                 isOwner = true;

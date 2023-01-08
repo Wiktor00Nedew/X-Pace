@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QPushButton>
+#include <QTextBrowser>
 
 class ViewPage : public QWidget{
     Q_OBJECT
@@ -25,7 +26,7 @@ private:
 
     QVBoxLayout *mainLayout_;
 
-    QTextEdit *markdownView_;
+    QTextBrowser *markdownView_;
     QPushButton *editButton_;
 
 public slots:

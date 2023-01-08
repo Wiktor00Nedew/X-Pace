@@ -47,6 +47,7 @@ public:
     ApiMessage apiRenameDirectory(const std::string& directoryId, const std::string& name);
     ApiMessage apiRenamePage(const std::string& pageId, const std::string& name);
     ApiMessage apiEditPage(const std::string& pageId, const std::string& content);
+    ApiMessage apiGetNameForUserById(const std::string& id);
 
 
     nlohmann::json getUser();
