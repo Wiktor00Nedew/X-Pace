@@ -51,6 +51,9 @@ public slots:
     void onTeamDeleted();
     void onTeamChanged(int currentIndex);
     void onSettingDefaultPage();
+    void onPageOpened(const std::string& pageId);
+    void onUnsavedChanges();
+    void onChangesSaved();
 
 signals:
     void logedOut();

@@ -8,6 +8,8 @@ PageReaderPage::PageReaderPage(QWidget *parent) {
     createComponents();
     setStyling();
     connectSignals();
+
+    setLayout(mainLayout_);
 }
 
 PageReaderPage::~PageReaderPage() {
@@ -40,6 +42,12 @@ void PageReaderPage::connectSignals() {
     connect(editPage_, &EditPage::settingDefaultPage, this, [=](){
         emit settingDefaultPage();
     });
+    connect(editPage_, &EditPage::unsavedChanges, this, [=](){
+        emit unsavedChanges();
+    });
+    connect(editPage_, &EditPage::changesSaved, this, [=](){
+        emit changesSaved();
+    });
 }
 
 void PageReaderPage::onEditingPage(const std::string& pageId) {
@@ -50,4 +58,13 @@ void PageReaderPage::onEditingPage(const std::string& pageId) {
 void PageReaderPage::onFinishingEditing(const std::string& pageId) {
     mainStack_->setCurrentIndex(mainStack_->indexOf(viewPage_));
     viewPage_->loadPage(pageId);
+}
+
+void PageReaderPage::loadPage(const std::string& pageId) {
+    mainStack_->setCurrentIndex(mainStack_->indexOf(viewPage_));
+    viewPage_->loadPage(pageId);
+}
+
+void PageReaderPage::onSaveRequest() {
+    editPage_->onSaveRequest();
 }

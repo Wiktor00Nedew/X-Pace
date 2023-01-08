@@ -2,6 +2,7 @@
 // Created by Wiktor on 07.01.2023.
 //
 
+#include <QInputDialog>
 #include "EditPage.h"
 #include "../api/ApiMessage.h"
 #include "../api/Api.h"
@@ -15,7 +16,7 @@ void EditPage::createComponents() {
     saveButton_ = new QPushButton();
     cancelButton_ = new QPushButton();
 
-    mainLayout_ ->addWidget(markdownEdit_, 0, 0, 1, 2);
+    mainLayout_->addWidget(markdownEdit_, 0, 0, 1, 2);
     mainLayout_->addWidget(cancelButton_, 1, 0);
     mainLayout_->addWidget(saveButton_, 1, 1);
 }
@@ -30,6 +31,9 @@ void EditPage::connectSignals() {
         emit finishingEditing(pageId_);
     });
     connect(saveButton_, &QPushButton::clicked, this, &EditPage::onSaveButtonClicked);
+    connect(markdownEdit_, &QTextEdit::textChanged, this, [=](){
+        emit unsavedChanges();
+    });
 }
 
 EditPage::EditPage(QWidget *parent) {
@@ -72,5 +76,28 @@ void EditPage::onSaveButtonClicked() {
         return;
     }
 
+    emit changesSaved();
+    emit finishingEditing(pageId_);
+}
+
+void EditPage::onSaveRequest() {
+    bool chosenOption = MessageBoxManager::get().question("Pytanie", "Czy chcesz zapisać zmiany?");
+
+    if (!chosenOption){
+        emit changesSaved();
+        emit finishingEditing(pageId_);
+        return;
+    }
+
+    std::string text = "." + markdownEdit_->toPlainText().toStdString();
+
+    ApiMessage apiResponse = Api::get().apiEditPage(pageId_, text);
+
+    if (apiResponse.type == ApiMessage::Error){
+        MessageBoxManager::get().about("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]));
+        return;
+    }
+
+    emit changesSaved();
     emit finishingEditing(pageId_);
 }

@@ -173,3 +173,8 @@ QTreeWidget QHeaderView::section {
 QInputDialog {
     background-color: #354345;
 }
+
+QTextEdit {
+    background-color: #354345;
+    color: #F4F4F6;
+}

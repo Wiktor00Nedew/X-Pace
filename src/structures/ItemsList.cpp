@@ -139,7 +139,7 @@ void ItemsList::connectSignals() {
 
 void ItemsList::onItemClicked(QTreeWidgetItem *item, int column) {
     if (item->text(3) == "true"){ // is page
-        // TODO open page
+        emit pageOpened(item->text(1).toStdString());
     }
     else if (item->text(3) == "false"){ // is not page
         if (std::find(loadedItems_.begin(), loadedItems_.end(), item->text(1).toStdString()) != loadedItems_.end())

@@ -33,8 +33,12 @@ private:
 public slots:
     void onEditingPage(const std::string& pageId);
     void onFinishingEditing(const std::string& pageId);
+    void loadPage(const std::string& pageId);
+    void onSaveRequest();
 
 signals:
     void settingDefaultPage();
+    void unsavedChanges();
+    void changesSaved();
 
 };

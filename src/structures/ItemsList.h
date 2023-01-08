@@ -36,6 +36,9 @@ private:
     TreeWidgetButtons *treeWidgetButtons_;
     QHeaderView *treeHeader_;
 
+signals:
+    void pageOpened(const std::string& pageId);
+
 public slots:
     void onItemClicked(QTreeWidgetItem *item, int column);
     void addPage();

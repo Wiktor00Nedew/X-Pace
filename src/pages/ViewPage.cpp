@@ -32,7 +32,9 @@ void ViewPage::createComponents() {
 
 void ViewPage::setStyling() {
     editButton_->setText("Edytuj stronę");
-    markdownView_->setDisabled(true);
+    markdownView_->setReadOnly(true);
+
+    markdownView_->setTextInteractionFlags(Qt::TextBrowserInteraction);
 }
 
 void ViewPage::connectSignals() {

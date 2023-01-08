@@ -65,27 +65,36 @@ void ApplicationPage::connectSignals() {
     connect(myTeamsPage_, &MyTeamsPage::teamDeleted, this, &ApplicationPage::onTeamDeleted);
     connect(topBar_, &TopBar::teamChanged, this, &ApplicationPage::onTeamChanged);
     connect(pageReaderPage_, &PageReaderPage::settingDefaultPage, this, &ApplicationPage::onSettingDefaultPage);
+    connect(itemsList_, &ItemsList::pageOpened, this, &ApplicationPage::onPageOpened);
+    connect(pageReaderPage_, &PageReaderPage::unsavedChanges, this, &ApplicationPage::onUnsavedChanges);
+    connect(pageReaderPage_, &PageReaderPage::changesSaved, this, &ApplicationPage::onChangesSaved);
 }
 
 void ApplicationPage::onLogout() {
-    bool active = true;
+    if (!isAllSaved)
+        pageReaderPage_->onSaveRequest();
+    if (isAllSaved){
+        bool active = true;
 
-    while(active){
-        ApiMessage apiResponse = Api::get().apiRevokeToken();
+        while(active){
+            ApiMessage apiResponse = Api::get().apiRevokeToken();
 
 
-        if(apiResponse.type == ApiMessage::Error){
-            bool chosenOption = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]) + "\n"
-                                                                                                                                        "Spróbować ponownie?");
-            if(!chosenOption){
-                return;
+            if(apiResponse.type == ApiMessage::Error){
+                bool chosenOption = MessageBoxManager::get().question("Error", QString::fromStdString(APIErrors[apiResponse.data["key"]]) + "\n"
+                                                                                                                                            "Spróbować ponownie?");
+                if(!chosenOption){
+                    return;
+                }
+                continue;
             }
-            continue;
+            active = false;
         }
-        active = false;
+
+        emit logedOut();
+        mainStack_->setCurrentIndex(mainStack_->indexOf(defaultPage_));
     }
 
-    emit logedOut();
 }
 
 void ApplicationPage::onLogin() {
@@ -113,9 +122,13 @@ void ApplicationPage::onLogin() {
 }
 
 void ApplicationPage::onMyTeamsOpened() {
-    mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
-    topBar_->loadTeams(Api::get().getUser()["teams"]);
-    emit myTeamsOpened();
+    if (!isAllSaved)
+        pageReaderPage_->onSaveRequest();
+    if (isAllSaved){
+        mainStack_->setCurrentIndex(mainStack_->indexOf(myTeamsPage_));
+        topBar_->loadTeams(Api::get().getUser()["teams"]);
+        emit myTeamsOpened();
+    }
 }
 
 void ApplicationPage::onCreateTeamOpened() {
@@ -145,5 +158,22 @@ void ApplicationPage::onTeamChanged(int currentIndex) {
 
 void ApplicationPage::onSettingDefaultPage() {
     mainStack_->setCurrentIndex(mainStack_->indexOf(defaultPage_));
+}
+
+void ApplicationPage::onPageOpened(const std::string &pageId) {
+    if (!isAllSaved)
+        pageReaderPage_->onSaveRequest();
+    if (isAllSaved){
+        mainStack_->setCurrentIndex(mainStack_->indexOf(pageReaderPage_));
+        pageReaderPage_->loadPage(pageId);
+    }
+}
+
+void ApplicationPage::onUnsavedChanges() {
+    isAllSaved = false;
+}
+
+void ApplicationPage::onChangesSaved() {
+    isAllSaved = true;
 }
 
