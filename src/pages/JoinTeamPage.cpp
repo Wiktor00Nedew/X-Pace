@@ -28,6 +28,7 @@ void JoinTeamPage::createComponents() {
     loadingIndicator_ = new LoadingIndicator();
     errorLabel_ = new ErrorLabel();
     addTeamRedirect_ = new ClickableLabel();
+    backButton_ = new QPushButton();
 
     mainLayout_->addWidget(title_);
     mainLayout_->addWidget(tokenLabel_);
@@ -37,12 +38,15 @@ void JoinTeamPage::createComponents() {
     mainLayout_->addWidget(loadingIndicator_);
     mainLayout_->addWidget(errorLabel_);
     mainLayout_->addStretch();
+    mainLayout_->addWidget(backButton_);
 }
 
 void JoinTeamPage::setStyling() {
     tokenLabel_->setText("Kod dołączenia");
     joinTeamButton_->setText("Dołącz do zespołu");
     title_->setText("Dołącz do zespołu");
+
+    backButton_->setText("Wróć");
 
     addTeamRedirect_->setText("Lub stwórz nowy zespół");
     addTeamRedirect_->setAlignment(Qt::AlignHCenter);
@@ -52,6 +56,10 @@ void JoinTeamPage::connectSignals() {
     connect(joinTeamButton_, &QPushButton::clicked, this, &JoinTeamPage::joinTeam);
     connect(addTeamRedirect_, &ClickableLabel::clicked, this, [=](){
         emit changingToAddTeam();
+    });
+    connect(backButton_, &QPushButton::clicked, this, [=](){
+        tokenBox_->clear();
+        emit changingToMyTeams();
     });
 }
 

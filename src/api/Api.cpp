@@ -359,4 +359,52 @@ ApiMessage Api::apiJoinTeam(const std::string &teamToken) {
     return apiPost(apiUrl + "/teams/token/register", body, apiToken);
 }
 
+ApiMessage Api::apiDeletePagePermission(const std::string &pageId, const std::string &entityId, const int accessLevel) {
+    nlohmann::json body = {
+            {"pageId", pageId},
+            {"permission", {
+                        {"entityId", entityId},
+                        {"key", accessLevel}
+            }}
+    };
+
+    return apiDelete(apiUrl + "/pages/permission", body, apiToken);
+}
+
+ApiMessage Api::apiAddPagePermission(const std::string &pageId, const std::string &entityId, const int accessLevel) {
+    nlohmann::json body = {
+            {"pageId", pageId},
+            {"permission", {
+                    {"entityId", entityId},
+                    {"key", accessLevel}
+            }}
+    };
+
+    return apiPost(apiUrl + "/pages/permission", body, apiToken);
+}
+
+ApiMessage Api::apiDeleteDirectoryPermission(const std::string &pageId, const std::string &entityId, const int accessLevel) {
+    nlohmann::json body = {
+            {"directoryId", pageId},
+            {"permission", {
+                    {"entityId", entityId},
+                    {"key", accessLevel}
+            }}
+    };
+
+    return apiDelete(apiUrl + "/directories/permission", body, apiToken);
+}
+
+ApiMessage Api::apiAddDirectoryPermission(const std::string &pageId, const std::string &entityId, const int accessLevel) {
+    nlohmann::json body = {
+            {"directoryId", pageId},
+            {"permission", {
+                    {"entityId", entityId},
+                    {"key", accessLevel}
+            }}
+    };
+
+    return apiPost(apiUrl + "/directories/permission", body, apiToken);
+}
+
 

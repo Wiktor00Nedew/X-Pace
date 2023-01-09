@@ -36,12 +36,14 @@ private:
     ErrorLabel *errorLabel_;
     LoadingIndicator *loadingIndicator_;
     ClickableLabel *addTeamRedirect_;
+    QPushButton *backButton_;
 
 public slots:
     void joinTeam();
 
 signals:
     void joinedTeam();
+    void changingToMyTeams();
     void changingToAddTeam();
 
 };

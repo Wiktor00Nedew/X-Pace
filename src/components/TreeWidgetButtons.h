@@ -19,8 +19,8 @@ public:
     void setStyling();
     void connectSignals();
 
-    void setDisableManage(bool disabled);
-    void setDisableDelete(bool disabled);
+    void setDisableAddDirectory(bool disabled);
+    void setDisableAddPage(bool disabled);
 
 private:
     QHBoxLayout *mainLayout_;

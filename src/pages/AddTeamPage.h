@@ -36,6 +36,8 @@ private:
     ErrorLabel *errorLabel_;
     LoadingIndicator *loadingIndicator_;
     ClickableLabel *joinRedirect_;
+    QPushButton *backButton_;
+
 
 public slots:
     void addTeam();
@@ -43,5 +45,6 @@ public slots:
 signals:
     void addedTeam();
     void changingToJoinTeam();
+    void changingToMyTeams();
 
 };

@@ -42,10 +42,10 @@ void TreeWidgetButtons::connectSignals() {
     });
 }
 
-void TreeWidgetButtons::setDisableManage(bool disabled) {
+void TreeWidgetButtons::setDisableAddDirectory(bool disabled) {
     addDirectoryButton_->setDisabled(disabled);
 }
 
-void TreeWidgetButtons::setDisableDelete(bool disabled) {
+void TreeWidgetButtons::setDisableAddPage(bool disabled) {
     addPageButton_->setDisabled(disabled);
 }

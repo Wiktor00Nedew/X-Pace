@@ -16,6 +16,7 @@
 #include "PageReaderPage.h"
 #include "ManageTeamPage.h"
 #include "JoinTeamPage.h"
+#include "ManagePermissionsPage.h"
 
 class ApplicationPage : public QWidget{
     Q_OBJECT
@@ -45,6 +46,7 @@ private:
     QWidget *defaultPage_;
     ManageTeamPage *manageTeamsPage_;
     JoinTeamPage *joinTeamPage_;
+    ManagePermissionsPage *managePermissionsPage_;
 
 public slots:
     void onLogout();
@@ -55,6 +57,7 @@ public slots:
     void onTeamDeleted();
     void onTeamChanged(int currentIndex);
     void onSettingDefaultPage();
+    void onSettingDefaultPageSaveChange();
     void onPageOpened(const std::string& pageId);
     void onUnsavedChanges();
     void onChangesSaved();
@@ -62,6 +65,7 @@ public slots:
     void onTeamNameChanged();
     void onJoinedTeam();
     void onChangingToJoinTeam();
+    void onManageItemPermissions(QTreeWidgetItem *item);
 
 signals:
     void logedOut();

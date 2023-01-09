@@ -53,7 +53,10 @@ public:
     ApiMessage apiGenerateModeratorCode(const std::string& teamId);
     ApiMessage apiGenerateOwnerCode(const std::string& teamId);
     ApiMessage apiJoinTeam(const std::string& teamToken);
-
+    ApiMessage apiDeletePagePermission(const std::string &pageId, const std::string &entityId, const int accessLevel);
+    ApiMessage apiDeleteDirectoryPermission(const std::string &pageId, const std::string &entityId, const int accessLevel);
+    ApiMessage apiAddPagePermission(const std::string &pageId, const std::string &entityId, const int accessLevel);
+    ApiMessage apiAddDirectoryPermission(const std::string &pageId, const std::string &entityId, const int accessLevel);
 
 
     nlohmann::json getUser();

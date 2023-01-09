@@ -174,7 +174,8 @@ QInputDialog {
     background-color: #354345;
 }
 
-QTextEdit {
+QTextBrowser {
     background-color: #354345;
     color: #F4F4F6;
+    font: 14px Rubik;
 }

@@ -87,6 +87,7 @@ void ManageTeamPage::connectSignals() {
     connect(changeNameButton_, &QPushButton::clicked, this, &ManageTeamPage::changeTeamName);
     connect(addNewUserButton_, &QPushButton::clicked, this, &ManageTeamPage::generateAccessCode);
     connect(backButton_, &QPushButton::clicked, this, [=](){
+        codeBox_->clear();
         emit setMyTeamsPage();
     });
 }
@@ -110,6 +111,8 @@ void ManageTeamPage::loadTeamInfo(const std::string &teamId) {
 void ManageTeamPage::generateAccessCode() {
     int checkButtonId = buttonGroupLogical_->checkedId();
 
+    //qDebug() << checkButtonId;
+
     ApiMessage apiResponse;
 
     switch (checkButtonId){
@@ -122,6 +125,7 @@ void ManageTeamPage::generateAccessCode() {
             }
 
             codeBox_->setText(QString::fromStdString(apiResponse.data["id"]));
+            break;
         case 1:
             apiResponse = Api::get().apiGenerateModeratorCode(teamId_);
 
@@ -131,6 +135,7 @@ void ManageTeamPage::generateAccessCode() {
             }
 
             codeBox_->setText(QString::fromStdString(apiResponse.data["id"]));
+            break;
         case 2:
             apiResponse = Api::get().apiGenerateOwnerCode(teamId_);
 
@@ -140,6 +145,7 @@ void ManageTeamPage::generateAccessCode() {
             }
 
             codeBox_->setText(QString::fromStdString(apiResponse.data["id"]));
+            break;
     }
 }
 

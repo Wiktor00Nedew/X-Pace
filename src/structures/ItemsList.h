@@ -38,6 +38,8 @@ private:
 
 signals:
     void pageOpened(const std::string& pageId);
+    void manageItemPermissions(QTreeWidgetItem *item);
+    void settingDefaultPage();
 
 public slots:
     void onItemClicked(QTreeWidgetItem *item, int column);
@@ -47,4 +49,6 @@ public slots:
     void prepareMenu(const QPoint& pos);
     void deleteItem(QTreeWidgetItem* item);
     void renameItem(QTreeWidgetItem* item);
+    void disableButtons();
+
 };

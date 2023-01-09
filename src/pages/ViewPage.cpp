@@ -45,6 +45,7 @@ void ViewPage::connectSignals() {
 }
 
 void ViewPage::loadPage(const std::string &pageId) {
+    editButton_->setDisabled(false);
     ApiMessage apiResponse = Api::get().apiGetPageById(pageId);
 
     if (apiResponse.type == ApiMessage::Error){
@@ -60,4 +61,27 @@ void ViewPage::loadPage(const std::string &pageId) {
     auto text = QString::fromStdString(textBeforeFormat);
 
     markdownView_->setMarkdown(text);
+
+    bool hasPrivilege = false;
+
+    if (apiResponse.data["owner"] == Api::get().getUser()["id"])
+        hasPrivilege = true;
+
+    for (auto permission : apiResponse.data["permissions"])
+        if ((permission["entityId"] == Api::get().getUser()["id"] && permission["key"] == 7) || (permission["entityId"] == "others" && permission["key"] == 7))
+            hasPrivilege = true;
+
+    auto team = Api::get().apiGetTeamById(apiResponse.data["team"]);
+
+    for (auto owner : team.data["owners"])
+        if (owner == Api::get().getUser()["id"])
+            hasPrivilege = true;
+
+    for (auto moderator : team.data["moderators"])
+        if (moderator == Api::get().getUser()["id"])
+            hasPrivilege = true;
+
+    if (!hasPrivilege){
+        editButton_->setDisabled(true);
+    }
 }

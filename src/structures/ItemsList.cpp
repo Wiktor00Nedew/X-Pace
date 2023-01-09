@@ -40,6 +40,8 @@ void ItemsList::loadItems(const std::string &teamId) {
     pagesList_->clear();
     //std::queue<std::tuple<std::string, std::string>> itemsToAdd;
 
+    loadedItems_.clear();
+
     bool active = true;
     ApiMessage apiResponse;
 
@@ -107,6 +109,9 @@ void ItemsList::loadItems(const std::string &teamId) {
             }
         }
     }
+
+    treeWidgetButtons_->setDisableAddDirectory(false);
+    treeWidgetButtons_->setDisableAddPage(false);
 }
 
 void ItemsList::setStyling() {
@@ -125,7 +130,8 @@ void ItemsList::setStyling() {
     pagesList_->setContextMenuPolicy(Qt::CustomContextMenu);
     pagesList_->setFocusPolicy(Qt::NoFocus);
 
-
+    treeWidgetButtons_->setDisableAddDirectory(true);
+    treeWidgetButtons_->setDisableAddPage(true);
 }
 
 void ItemsList::connectSignals() {
@@ -354,18 +360,24 @@ void ItemsList::prepareMenu(const QPoint &pos) {
 
     QAction *delAct = new QAction(nd->text(3) == "false" ? "Usuń folder" : "Usuń plik", this);
     QAction *renameAct = new QAction("Zmień nazwę", this);
+    QAction *manageAct = new QAction("Zarządzaj uprawnieniami", this);
     delAct->setStatusTip(tr("Usuń"));
     renameAct->setStatusTip(tr("Zmień nazwę"));
+    manageAct->setStatusTip(tr("Zmień uprawnienia"));
     connect(delAct, &QAction::triggered, this, [=](){
         deleteItem(nd);
     });
     connect(renameAct, &QAction::triggered, this, [=](){
         renameItem(nd);
     });
+    connect(manageAct, &QAction::triggered, this, [=](){
+        emit manageItemPermissions(nd);
+    });
 
 
     QMenu menu(this);
     menu.addAction(renameAct);
+    menu.addAction(manageAct);
     menu.addAction(delAct);
 
     QPoint pt(pos);
@@ -381,6 +393,7 @@ void ItemsList::deleteItem(QTreeWidgetItem* item) {
             return;
         }
 
+        emit settingDefaultPage();
         delete item;
     }
     else if (item->text(3) == "true"){ // page
@@ -391,6 +404,7 @@ void ItemsList::deleteItem(QTreeWidgetItem* item) {
             return;
         }
 
+        emit settingDefaultPage();
         delete item;
     }
 }
@@ -433,6 +447,12 @@ void ItemsList::renameItem(QTreeWidgetItem *item) {
 
         item->setText(0, QString::fromStdString(apiResponse.data["name"]));
     }
+}
+
+void ItemsList::disableButtons() {
+    treeWidgetButtons_->setDisableAddDirectory(true);
+    treeWidgetButtons_->setDisableAddPage(true);
+    pagesList_->clear();
 }
 
 /*

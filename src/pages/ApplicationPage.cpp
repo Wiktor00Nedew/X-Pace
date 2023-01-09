@@ -16,7 +16,7 @@ ApplicationPage::ApplicationPage(QWidget *parent) {
 
     setLayout(mainLayout_);
 
-    isAllSaved = true; // TODO add opening page on click on tree widget and change this var adequately
+    isAllSaved = true;
 }
 
 ApplicationPage::~ApplicationPage() {
@@ -35,6 +35,7 @@ void ApplicationPage::createComponents() {
     defaultPage_ = new QWidget();
     manageTeamsPage_ = new ManageTeamPage();
     joinTeamPage_ = new JoinTeamPage();
+    managePermissionsPage_ = new ManagePermissionsPage();
 
     mainStack_->addWidget(myTeamsPage_);
     mainStack_->addWidget(addTeamPage_);
@@ -42,7 +43,7 @@ void ApplicationPage::createComponents() {
     mainStack_->addWidget(defaultPage_);
     mainStack_->addWidget(manageTeamsPage_);
     mainStack_->addWidget(joinTeamPage_);
-
+    mainStack_->addWidget(managePermissionsPage_);
 
     mainSplitter_ = new QSplitter(Qt::Horizontal);
     mainSplitter_->addWidget(itemsList_);
@@ -79,6 +80,11 @@ void ApplicationPage::connectSignals() {
     connect(manageTeamsPage_, &ManageTeamPage::teamNameChanged, this, &ApplicationPage::onTeamNameChanged);
     connect(addTeamPage_, &AddTeamPage::changingToJoinTeam, this, &ApplicationPage::onChangingToJoinTeam);
     connect(joinTeamPage_, &JoinTeamPage::changingToAddTeam, this, &ApplicationPage::onCreateTeamOpened);
+    connect(addTeamPage_, &AddTeamPage::changingToMyTeams, this, &ApplicationPage::onMyTeamsOpened);
+    connect(joinTeamPage_, &JoinTeamPage::changingToMyTeams, this, &ApplicationPage::onMyTeamsOpened);
+    connect(itemsList_, &ItemsList::settingDefaultPage, this, &ApplicationPage::onSettingDefaultPageSaveChange);
+    connect(itemsList_, &ItemsList::manageItemPermissions, this, &ApplicationPage::onManageItemPermissions);
+    connect(managePermissionsPage_, &ManagePermissionsPage::settingDefaultPage, this, &ApplicationPage::onSettingDefaultPage);
 }
 
 void ApplicationPage::onLogout() {
@@ -165,6 +171,8 @@ void ApplicationPage::onTeamChanged(int currentIndex) {
         std::string team = Api::get().getUser()["teams"][currentIndex];
         itemsList_->loadItems(team);
     }
+    else
+        itemsList_->disableButtons();
 }
 
 void ApplicationPage::onSettingDefaultPage() {
@@ -205,5 +213,19 @@ void ApplicationPage::onJoinedTeam() {
 
 void ApplicationPage::onChangingToJoinTeam() {
     mainStack_->setCurrentIndex(mainStack_->indexOf(joinTeamPage_));
+}
+
+void ApplicationPage::onSettingDefaultPageSaveChange() {
+    isAllSaved = true;
+    mainStack_->setCurrentIndex(mainStack_->indexOf(defaultPage_));
+}
+
+void ApplicationPage::onManageItemPermissions(QTreeWidgetItem *item) {
+    if (!isAllSaved)
+        pageReaderPage_->onSaveRequest();
+    if (isAllSaved){
+        mainStack_->setCurrentIndex(mainStack_->indexOf(managePermissionsPage_));
+        managePermissionsPage_->loadPermissionForItem(item);
+    }
 }
 
